@@ -1,0 +1,114 @@
+{% extends 'kumarBuilding/menu.html' %}
+{% load static %}
+{% block content %}
+    <body onload="hide()">
+    <div style="position: absolute; width: 60%; height: 85%; background-color: white; left: 20%; opacity: .6; border-radius: 10px">
+    </div>
+    <div style="position: absolute; width: 60%; height: 85%;  left: 20%;  border-radius: 10px">
+        <div style="position: absolute; width: 100%; height: 10%; background-color: dimgrey; border-top-left-radius: 10px; border-top-right-radius: 10px">
+            <label style="font-size: x-large; top: 20%; position: absolute; color: white; left: 10%">Inventory Items</label>
+            <button id="addproduct" style="position: absolute; top: 25%; left: 80%" onclick="show()" >Add Product</button>
+        </div>
+        <div style="position: absolute; top: 12%; left: 1%; width: 98%; height: 86%; overflow-x: hidden; overflow-y: scroll">
+            //div for product list
+        </div>
+    </div>
+    <div id="bgblack" style="position: absolute; top:0%; left: 0%; width: 100%; height: 100%; background-color: black; opacity: .8">
+    </div>
+    <form method="post" action="additem">
+        {% csrf_token %}
+        <div id="productinput" style="position: absolute; top:20%; left: 10%; width: 80%; height: 60%; background-color: #1e6468; border-radius: 10px">
+    <button id="Submit" type="submit" style="position: absolute; top: 92%; left: 40%">Submit</button>
+    <!--<button id="Submit" type="submit" style="position: absolute; top: 92%; left: 40%" onclick="additem()">Submit</button>-->
+    <button id="Close" type="button" style="position: absolute; top: 92%; left: 55%" onclick="hide()">Close</button>
+    <div style="position: absolute; width: 100%; height: 90%; background-color: white; border-radius: 10px; overflow-x: hidden; overflow-y: auto">
+        <table id="textboxDiv" border="2" style="top: 7%; left: 0%; position: absolute">
+            <tr>
+                <th width="2%">S/N</th>
+                <th>Item</th>
+                <th>Address</th>
+                <th>Mobile</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Date</th>
+                <th>Total Price</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>
+                    <input list="item" name="item1">
+                    <datalist id="item">
+                        {% for i in items %}
+                            <option value={{ i.itemname }}>
+                        {% endfor %}
+                    </datalist>
+                </td>
+                <td>
+                    <textarea id="dealeradd" name="dealeradd1"></textarea>
+                </td>
+                <td>
+                    <input type="number" id="mobile" name="mobile1">
+                </td>
+                <td>
+                    <input type="number" id="unitprice1q" name="quantity1">
+                </td>
+                <td>
+                    <input type="number" id="unitprice1" name="unitprice1" onfocusout="multip(this.id)">
+                </td>
+                <td>
+                    <input type="date" id="datereceived" name="datereceived1">
+                </td>
+                <td>
+                    <input type="number" id="unitprice1t" name="totalprice1">
+                </td>
+            </tr>
+        </table>
+        <button id="Add" type="button">Add More</button>
+        <input type="number" id="clickscnt" name="clickscnt">
+        </div>
+        <script>
+            var clicks1 = 1;
+            document.getElementById("clickscnt").style.display = "none"
+            $(document).ready(function() {
+                $("#Add").on("click", function() {
+                    clicks1 += 1;
+                    $("#textboxDiv").append("            <tr>\n" +
+                        "                <td>"+clicks1+"</td>\n" +
+                        "                <td>\n" +
+                        "                    <input list=\"browsers\" name=\"item"+clicks1+"\">\n" +
+                        "                    <datalist id=\"browsers\">\n" +
+                                            "{% for foo in items %}" +
+                                            "<option value={{ foo.itemname }}>" +
+                                            "{% endfor %}" +
+                        "                    </datalist>\n" +
+                        "                </td>\n" +
+                        "                <td>\n" +
+                        "                    <textarea name=\"dealeradd"+clicks1+"\"></textarea>\n" +
+                        "                </td>\n" +
+                        "                <td>\n" +
+                        "                    <input type=\"number\" name=\"mobile"+clicks1+"\">\n" +
+                        "                </td>\n" +
+                        "                <td>\n" +
+                        "                    <input type=\"number\" id=\"unitprice"+clicks1+"q\" name=\"quantity"+clicks1+"\">\n" +
+                        "                </td>\n" +
+                        "                <td>\n" +
+                        "                    <input type=\"number\" id=\"unitprice"+clicks1+"\" onfocusout=\"multip(this.id)\" name=\"unitprice"+clicks1+"\">\n" +
+                        "                </td>\n" +
+                        "                <td>\n" +
+                        "                    <input type=\"date\" name=\"datereceived"+clicks1+"\">\n" +
+                        "                </td>\n" +
+                        "                <td>\n" +
+                        "                    <input type=\"number\" id=\"unitprice"+clicks1+"t\" name=\"totalprice"+clicks1+"\">\n" +
+                        "                </td>\n" +
+                        "            </tr>");
+                    document.getElementById("clickscnt").value = clicks1;
+                });
+                $("#Remove").on("click", function() {
+                    $("#textboxDiv").children().last().remove();
+                });
+            });
+    </script>
+    </div>
+    </form>
+    </body>
+{% endblock %}
