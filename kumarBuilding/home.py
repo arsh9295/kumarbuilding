@@ -136,7 +136,8 @@ def billing(request):
 
 def products(request):
     items = itemlist.objects.all()
-    context = {"items": items}
+    inventory = InventoryList.objects.all()
+    context = {"items": items, "inventory": inventory}
     # print(context)
     # return render(request, 'kumarBuilding/product.html')
     return render(request, 'kumarBuilding/product.html', context)

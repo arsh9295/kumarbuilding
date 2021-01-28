@@ -11,7 +11,22 @@
             <button id="addproduct" style="position: absolute; top: 25%; left: 85%"><a href="todayprice" target="_blank">Today Price</a></button>
         </div>
         <div style="position: absolute; top: 12%; left: 1%; width: 98%; height: 86%; overflow-x: hidden; overflow-y: scroll">
-            //div for product list
+            <table id="textboxDiv" border="2" style="top: 7%; left: 0%; position: absolute">
+                <tr style="font-size: x-large; background-color: #36b0b6">
+                    <th width="3%">S/N</th>
+                    <th >Item</th>
+                    <th width="30%">Availability</th>
+                    <th width="30%">Today Price</th>
+                </tr>
+                {% for i in inventory %}
+                    <tr style="font-size: large;">
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ i.itemname }}</td>
+                        <td>{{ i.quantity }}</td>
+                        <td>{{ i.todayprice }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
     <div id="bgblack" style="position: absolute; top:0%; left: 0%; width: 100%; height: 100%; background-color: black; opacity: .8">
