@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kumar Building Materials</title>
+</head>
+<body>
+{#    <div style="position: absolute; width: 60%; height: 85%; background-color: white; left: 20%; opacity: .6; border-radius: 10px">#}
+{#    </div>#}
+    <form method="post" action="addtodyprice">
+        {% csrf_token %}
+        <div style="position: absolute; width: 60%; height: 85%;  left: 20%;  border-radius: 10px">
+        <div style="position: absolute; width: 100%; height: 23%; background-color: dimgrey; border-top-left-radius: 10px; border-top-right-radius: 10px">
+            <label style="font-size: x-large; top: 4%; position: absolute; color: white; left: 3%">Billing</label>
+        </div>
+                <div style="position: absolute; top: 30%; left: 1%; width: 98%; height: 50%; overflow: scroll">
+                <table id="textboxDiv" border="2" >
+                    <tr>
+                        <th width="2%" id="one">S/N</th>
+                        <th width="40%" id="two">Item</th>
+                        <th id="three">Today Price</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select id="item1" name="item1" style="width: 100%">
+                                <option value="select" >Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" id="unitprice1" name="unitprice1"></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>
+                            <select id="item2" name="item2" style="width: 100%">
+                                <option value="select">Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" name="unitprice2" id="unitprice2"></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>
+                            <select id="item3" name="item3" style="width: 100%">
+                                <option value="select">Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" name="unitprice3" id="unitprice3"></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>
+                            <select id="item4" name="item4" style="width: 100%">
+                                <option value="select">Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" id="unitprice4" name="unitprice4"></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>
+                            <select id="item5" name="item5" style="width: 100%">
+                                <option value="select">Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" id="unitprice5" name="unitprice5"></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>
+                            <select id="item6" name="item6" style="width: 100%">
+                                <option value="select">Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" id="unitprice6" name="unitprice6"></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>
+                            <select id="item7" name="item7" style="width: 100%">
+                                <option value="select">Select</option>
+                                {% for i in items %}
+                                    <option value={{ i.itemname }}>{{ i.itemname }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" id="unitprice7" name="unitprice7"></td>
+                    </tr>
+                </table>
+{#                    <button id="Add" type="button" >Add More</button>#}
+                </div>
+                <button id="done" type="submit" style="position: absolute; top: 88%; left: 25%">Submit</button>
+                <input type="number" id="clickscnt" name="clickscnt">
+        <script>
+        var clicks = 7;
+        document.getElementById("clickscnt").style.display = "none"
+        $(document).ready(function() {
+            $("#Add").on("click", function() {
+                clicks += 1;
+                $("#textboxDiv").append("                    <tr>\n" +
+                    "                        <td>"+clicks+"</td>\n" +
+                    "                        <td>\n" +
+                    "                            <select id=\"item"+clicks+"\" name=\"item"+clicks+"\" style=\"width: 100%\">" +
+                    "                              <option value=\"select\">Select</option>\n"+
+                    "                           {% for i in items %}"+
+                    "                                <option value={{ i.itemname }}>{{ i.itemname }}</option>" +
+                    "                           {% endfor %}"+
+                    "                            </select>\n" +
+                    "                        </td>\n" +
+                    "                        <td><input type=\"number\" id=\"unitprice"+clicks+"\" name=\"unitprice"+clicks+"\"></td>\n" +
+                    "                    </tr>");
+            });
+            document.getElementById("clickscnt").value = clicks
+            $("#Remove").on("click", function() {
+                $("#textboxDiv").children().last().remove();
+            });
+        });
+    </script>
+    </div>
+    </form>
+</body>
+</html>

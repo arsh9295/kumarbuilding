@@ -142,6 +142,32 @@ def products(request):
     return render(request, 'kumarBuilding/product.html', context)
 
 
+def todayprice(request):
+    todaypricedb = InventoryList.objects.all()
+    context = {"items": todaypricedb}
+    return render(request, 'kumarBuilding/todayprice.html', context)
+
+
+def addtodyprice(request):
+    if request.method == 'POST':
+        item = [None]
+        todaypricedb = [None]
+        clickscnt = request.POST['clickscnt']
+        if clickscnt:
+            clickscnt = clickscnt
+        else:
+            clickscnt = 7
+        for i in range(1, int(clickscnt) + 1):
+            if request.POST['item' + str(i)] and request.POST['unitprice' + str(i)]:
+                item.append(request.POST['item' + str(i)])
+                todaypricedb.append(request.POST['unitprice' + str(i)])
+                itemsfatch = InventoryList.objects.all().filter(Q(itemname=item[i]))
+                itemsfatch.update(todayprice=str(todaypricedb[i]))
+    todaypricedb = InventoryList.objects.all()
+    context = {"items": todaypricedb}
+    return render(request, 'kumarBuilding/todayprice.html', context)
+
+
 def customer(request):
     return render(request, 'kumarBuilding/customer.html')
 

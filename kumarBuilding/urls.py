@@ -25,4 +25,6 @@ urlpatterns = [
     path('board', home.board, name='board'),
     path('billing', home.billing, name='billing'),
     path('additem', home.additem, name='additem'),
+    path('todayprice', home.todayprice, name='todayprice'),
+    path('addtodyprice', home.addtodyprice, name='addtodyprice'),
 ]
