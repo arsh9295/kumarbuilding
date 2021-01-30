@@ -3,10 +3,37 @@ from kumarBuilding.models import itemlist, InventoryList, CustomerList, ItemPurc
 from django.http import HttpResponse
 from django.db.models import Q
 from datetime import datetime
-
+from itertools import chain
 
 def index(request):
     return render(request, 'kumarBuilding/home.html')
+
+
+def useritemlist(request):
+    cstmrid = request.POST['custmitms']
+    # customerdetials = CustomerList.objects.select_related('customerpurchage', 'itempurchage')
+    # customerdetials = CustomerPurchage.objects.select_related('customerlist')
+    # itemlistone = ItemPurchaged.objects.select_related('customerpurchage__customerlist')
+    itemlistone = ItemPurchaged.objects.all().select_related('customerpurchage').select_related('customerpurchage__customerlist').filter(Q(customerpurchage__customerlist_id=int(cstmrid)))
+    # print(str(itemlistone.query))
+    # print(itemlistone[2].purchageitem)
+    # customerdetails = CustomerPurchage.objects.all().filter(Q(customerlist_id=int(cstmrid)))
+    # print(customerdetails.itempurchaged_set.all())
+    # print(customerdetails[1].purchagedate)
+    print(itemlistone[0].customerpurchage.purchagedate)
+    # custitm = []
+    # custprc = CustomerPurchage.objects.all().filter(Q(customerlist_id=int(cstmrid)))
+    # print(custprc)
+    # for i in range(0, int(len(custprc))):
+        # print(i)
+        # customerpurchage_id = custprc[i].id))
+    # custitm = ItemPurchaged.objects.all().filter(customerpurchage_id__in=custprc)
+    # result_list = list(chain(custprc, custitm))
+    # custi = zip(custitm, custprc)
+    # print(result_list)
+    context = {"overall": itemlistone}
+    # print(context)
+    return render(request, 'kumarBuilding/useritemlist.html', context)
 
 
 def billing(request):
@@ -23,7 +50,7 @@ def billing(request):
         borr = str(abs(int(borr)))
         customermobile = request.POST['customermobile']
         customername = request.POST['customername']
-        customeremail = request.POST['customeremail']
+        customeremail = request.POST.get("customeremail", None)
         customeraddress = request.POST['customeraddress']
         checkboxvalue = request.POST.get("returncheck", "off")
         if checkboxvalue == "off":
@@ -64,7 +91,7 @@ def billing(request):
         if customerpurchagenumber:
             customerpurchagenumber.reverse()[0]
             customerpurchagenumber = customerpurchagenumber[0]
-            print(type(customerpurchagenumber))
+            # print(type(customerpurchagenumber))
             purchageid = int(str(customerpurchagenumber)) + 1
         else:
             purchageid = "1"
@@ -72,6 +99,22 @@ def billing(request):
             clickscnt = clickscnt
         else:
             clickscnt = 7
+        # print(customeridone[0])
+        # print(customeridone[0].id)
+        if customeridone:
+            customeridone.update(borrow=totalborrow, advance=advancetotal)
+            # customerdd = CustomerPurchage.objects.create(purchageid=str(purchageid), purchagedate=datetime.today().strftime('%Y-%m-%d'), advancet=advance,borrowt=borr, received=receive, totalprice=totaltran, customerlist=customeridone)
+            customerpurchagelist = CustomerPurchage(purchageid=str(purchageid), purchagedate=datetime.today().strftime('%Y-%m-%d'), advancet=advance,borrowt=borr, received=receive, totalprice=totaltran, customerlist_id=customeridone[0].id)
+            customerpurchagelist.save()
+        else:
+            customerlistentry = CustomerList(customername=customername, customeremail=customeremail, customermobile=customermobile, customerid=customerid, advance=advance, borrow=totalborrow, customeraddress=customeraddress)
+            customerlistentry.save()
+            customerlistentry.customerpurchage_set.all()
+            customerpurchagelist = customerlistentry.customerpurchage_set.create(purchageid=str(purchageid),
+                                                                             purchagedate=datetime.today().strftime(
+                                                                                 '%Y-%m-%d'), advancet=advance,
+                                                                             borrowt=borr, received=receive,
+                                                                             totalprice=totaltran)
         for i in range(1, int(clickscnt) + 1):
             # print("Utkarsh")
             print(request.POST['item'+str(i)+'i'])
@@ -81,45 +124,40 @@ def billing(request):
                 item.append(request.POST['item'+str(i)])
                 itemq.append(request.POST['item'+str(i)+'q'])
                 itemt.append(request.POST['item'+str(i)+'t'])
-                itempurched = ItemPurchaged(purchageitem=itemi[i], unitprice=item[i], quantity=itemq[i])
-                itempurched.save()
-                # customerpurchage = CustomerPurchage(purchageid=purchageid, purchagedate=datetime.today().strftime('%Y-%m-%d'))
-                # customerpurchage.save()
-                # itempurched.customerpurchage_set.all()
-                # customerpurchage = itempurched.customerpurchage_set.create(purchageid=str(purchageid), purchagedate=datetime.today().strftime('%Y-%m-%d'), borrowt=)
-                # # customerpurchage.save()
-                # customerpurchage.customerlist_set.all()
-                # customerlist = customerpurchage.customerlist_set.create(customername=customername, customeremail=customeremail,customermobile=customermobile, customerid=customerid)
-                # customerlist = CustomerList(customername=customername, customeremail=customeremail,customermobile=customermobile, customerid=customerid)
-                # customerlist.save()
-                itemsfatch = InventoryList.objects.all().filter(Q(itemname=itemi[i]))
-                print(itemsfatch)
-                # itemsfatch = InventoryList.objects.all().get_or_create(Q(itemname=request.POST['item'+str(i)]))
+                customerpurchagelist.itempurchaged_set.all()
+                itempurched = customerpurchagelist.itempurchaged_set.create(purchageitem=itemi[i], unitprice=item[i], quantity=itemq[i])
+                # itempurched.save()
+
+                #
+                #
+                # itemsfatch = InventoryList.objects.all().filter(Q(itemname=itemi[i]))
                 # print(itemsfatch)
-                if itemsfatch:
-                    quantityo = itemsfatch[0].quantity
-                    quantityt = int(quantityo) - int(itemq[i])
-                    itemsfatch.update(quantity=str(quantityt))
-                    # memberone = InventoryList(itemname=request.POST['item'+str(i)], quantity=str(quantityt))
-                    # memberone.save()
-                # else:
-                #     memberone = InventoryList(itemname=request.POST['item'+str(i)], quantity=request.POST['quantity'+str(i)])
-                #     memberone.save()
-        itempurched.customerpurchage_set.all()
-        customerpurchage = itempurched.customerpurchage_set.create(purchageid=str(purchageid), purchagedate=datetime.today().strftime('%Y-%m-%d'), borrowt=borr, advancet=advance, totalprice=totaltran, received=receive)
-        if customeridone:
-            print("ping")
-            customeridone.update(borrow=totalborrow, advance=advancetotal)
-            # customerpurchage.customerlist_set.all()
-            # customerlist = customerpurchage.customerlist_set.update(customername=customername,
-            #                                                         customeremail=customeremail,
-            #                                                         customeraddress=customeraddress,
-            #                                                         customerid=customerid, borrow=totalborrow,
-            #                                                         advance=advancetotal)
-        else:
-            print("pong")
-            customerpurchage.customerlist_set.all()
-            customerlist = customerpurchage.customerlist_set.create(customername=customername, customeremail=customeremail, customermobile=customermobile, customeraddress=customeraddress, customerid=customerid, borrow=totalborrow, advance=advancetotal)
+                # # itemsfatch = InventoryList.objects.all().get_or_create(Q(itemname=request.POST['item'+str(i)]))
+                # # print(itemsfatch)
+                # if itemsfatch:
+                #     quantityo = itemsfatch[0].quantity
+                #     quantityt = int(quantityo) - int(itemq[i])
+                #     itemsfatch.update(quantity=str(quantityt))
+                #     # memberone = InventoryList(itemname=request.POST['item'+str(i)], quantity=str(quantityt))
+                #     # memberone.save()
+                # # else:
+                # #     memberone = InventoryList(itemname=request.POST['item'+str(i)], quantity=request.POST['quantity'+str(i)])
+                # #     memberone.save()
+        # itempurched.customerpurchage_set.all()
+        # customerpurchage = itempurched.customerpurchage_set.create(purchageid=str(purchageid), purchagedate=datetime.today().strftime('%Y-%m-%d'), borrowt=borr, advancet=advance, totalprice=totaltran, received=receive)
+        # if customeridone:
+        #     # print("ping")
+        #     customeridone.update(borrow=totalborrow, advance=advancetotal)
+        #     # customerpurchage.customerlist_set.all()
+        #     # customerlist = customerpurchage.customerlist_set.update(customername=customername,
+        #     #                                                         customeremail=customeremail,
+        #     #                                                         customeraddress=customeraddress,
+        #     #                                                         customerid=customerid, borrow=totalborrow,
+        #     #                                                         advance=advancetotal)
+        # else:
+        #     print("pong")
+        #     customerpurchage.customerlist_set.all()
+        #     customerlist = customerpurchage.customerlist_set.create(customername=customername, customeremail=customeremail, customermobile=customermobile, customeraddress=customeraddress, customerid=customerid, borrow=totalborrow, advance=advancetotal)
 
 
 
@@ -170,7 +208,11 @@ def addtodyprice(request):
 
 
 def customer(request):
-    return render(request, 'kumarBuilding/customer.html')
+    customers = CustomerList.objects.all()
+    itempurchaged = ItemPurchaged.objects.all()
+    customerpurchage = CustomerPurchage.objects.all()
+    context = {"customers": customers, "itempurchaged": itempurchaged, "customerpurchage": customerpurchage}
+    return render(request, 'kumarBuilding/customer.html', context)
 
 
 def board(request):
@@ -217,7 +259,12 @@ def additem(request):
             else:
                 memberone = InventoryList(itemname=request.POST['item1'], quantity=request.POST['quantity1'])
                 memberone.save()
-        return redirect('/')
+    items = itemlist.objects.all()
+    inventory = InventoryList.objects.all()
+    context = {"items": items, "inventory": inventory}
+    # print(context)
+    # return render(request, 'kumarBuilding/product.html')
+    return render(request, 'kumarBuilding/product.html', context)
 
     # itemname: $item,
     # address: $dealeradd,

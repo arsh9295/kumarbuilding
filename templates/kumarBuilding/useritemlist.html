@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="productinputcust" style="position: absolute; top:20%; left: 10%; width: 80%; height: 60%; background-color: #1e6468; border-radius: 10px">
+    <div style="position: absolute; width: 100%; height: 90%; background-color: white; border-radius: 10px; overflow-x: hidden; overflow-y: auto">
+        <table id="textboxDiv" border="2" style="top: 7%; left: 0%; position: absolute; border: 0px; border-width: unset">
+            <tr>
+                <th width="2%">S/N</th>
+                <th>Date</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unitprice</th>
+            </tr>
+            {% for i in overall %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.customerpurchage.purchagedate }}</td>
+                <td>{{ i.purchageitem }}</td>
+                <td>{{ i.quantity }}</td>
+                <td>{{ i.unitprice }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+</body>
+</html>

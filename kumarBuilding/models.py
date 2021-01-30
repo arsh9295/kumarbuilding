@@ -23,13 +23,18 @@ class InventoryList(models.Model):
         return self.itemname
 
 
-class ItemPurchaged(models.Model):
-    purchageitem = models.CharField(max_length=100)
-    quantity = models.CharField(max_length=100)
-    unitprice = models.CharField(max_length=100)
+class CustomerList(models.Model):
+    customername = models.CharField(max_length=100)
+    customeremail = models.CharField(max_length=100)
+    customermobile = models.CharField(max_length=100)
+    customeraddress = models.CharField(max_length=100)
+    customerid = models.CharField(max_length=100)
+    borrow = models.CharField(max_length=100)
+    advance = models.CharField(max_length=100)
+    # customerpurchage = models.ForeignKey(CustomerPurchage, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.purchageitem
+        return self.customername
 
 
 class CustomerPurchage(models.Model):
@@ -39,23 +44,21 @@ class CustomerPurchage(models.Model):
     advancet = models.CharField(max_length=100)
     totalprice = models.CharField(max_length=100)
     received = models.CharField(max_length=100)
-    itempurchage = models.ForeignKey(ItemPurchaged, on_delete=models.CASCADE)
+    customerlist = models.ForeignKey(CustomerList, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.purchageid
 
 
-class CustomerList(models.Model):
-    customername = models.CharField(max_length=100)
-    customeremail = models.CharField(max_length=100)
-    customermobile = models.CharField(max_length=100)
-    customeraddress = models.CharField(max_length=100)
-    customerid = models.CharField(max_length=100)
-    borrow = models.CharField(max_length=100)
-    advance = models.CharField(max_length=100)
+class ItemPurchaged(models.Model):
+    purchageitem = models.CharField(max_length=100)
+    quantity = models.CharField(max_length=100)
+    unitprice = models.CharField(max_length=100)
     customerpurchage = models.ForeignKey(CustomerPurchage, on_delete=models.CASCADE)
+    # customerlist = models.ForeignKey(CustomerList, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.customername
+        return self.purchageitem
+
     # class Meta:
     #     db_table = "item_details"

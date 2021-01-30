@@ -27,4 +27,5 @@ urlpatterns = [
     path('additem', home.additem, name='additem'),
     path('todayprice', home.todayprice, name='todayprice'),
     path('addtodyprice', home.addtodyprice, name='addtodyprice'),
+    path('useritemlist', home.useritemlist, name='useritemlist'),
 ]

@@ -1,5 +1,67 @@
 {% extends 'kumarBuilding/menu.html' %}
 {% load static %}
-
 {% block content %}
+    <body onload="hidecustomer()">
+    <div style="position: absolute; width: 60%; height: 85%; background-color: white; left: 20%; opacity: .6; border-radius: 10px">
+    </div>
+    <div style="position: absolute; width: 60%; height: 85%;  left: 20%;  border-radius: 10px">
+        <div style="position: absolute; width: 100%; height: 10%; background-color: dimgrey; border-top-left-radius: 10px; border-top-right-radius: 10px">
+            <label style="font-size: x-large; top: 20%; position: absolute; color: white; left: 10%">Customer List</label>
+        </div>
+        <div style="position: absolute; top: 12%; left: 1%; width: 98%; height: 86%; overflow-x: hidden; overflow-y: scroll">
+            <table id="textboxDiv" border="0" style="top: 7%; left: 0%; position: absolute">
+                <tr>
+                    <th width="3%">S/N</th>
+                    <th >Customer Name</th>
+                    <th>Address</th>
+                    <th>Mobile Number</th>
+                    <th>Advance</th>
+                    <th>Borrow</th>
+                </tr>
+                {% for i in customers %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <form method="post" action="useritemlist" target="_blank">
+                             {% csrf_token %}
+                            <input type="text" value="{{ i.id }}" id="userlistid" name="custmitms" style="visibility: hidden">
+                        <td><button style="background-color: transparent; border: 0px" type="submit" >{{ i.customername }}</button></td>
+                        </form>
+                        <td>{{ i.customeraddress }}</td>
+                        <td>{{ i.customermobile }}</td>
+                        <td>{{ i.advance }}</td>
+                        <td>{{ i.borrow }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <!--------------------------------popup customer details on click (Start)------------------------------------->
+{#    <div id="bgblackcust" style="position: absolute; top:0%; left: 0%; width: 100%; height: 100%; background-color: black; opacity: .8">#}
+{#    </div>#}
+{#    <div id="productinputcust" style="position: absolute; top:20%; left: 10%; width: 80%; height: 60%; background-color: #1e6468; border-radius: 10px">#}
+{#    <button id="Close" type="button" style="position: absolute; top: 92%; left: 47%" onclick="hidecustomer()">Close</button>#}
+{#    <div style="position: absolute; width: 100%; height: 90%; background-color: white; border-radius: 10px; overflow-x: hidden; overflow-y: auto">#}
+{#        <table id="textboxDiv" border="2" style="top: 7%; left: 0%; position: absolute">#}
+{#            <tr>#}
+{#                <th width="2%">S/N</th>#}
+{#                <th>Item</th>#}
+{#                <th>Quantity</th>#}
+{#                <th>Price</th>#}
+{#                <th>Date</th>#}
+{#            </tr>#}
+{#            {% for i in customers %}#}
+{#            <tr>#}
+{#                <td>1</td>#}
+{#                <td>{{ i.customerpurchage_set.all }}</td>#}
+{#                <td>B</td>#}
+{#                <td>C</td>#}
+{#                <td>D</td>#}
+{#            </tr>#}
+{#            {% endfor %}#}
+{#        </table>#}
+{#        </div>#}
+{#    </div>#}
+    </body>
+    <!--------------------------------popup customer details on click (End)------------------------------------->
 {% endblock %}
